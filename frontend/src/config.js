@@ -55,6 +55,6 @@ export const routes = [
 
 // use baseurl defined by the environment variable  (Only for debug purpose)
 // or use default (browser location url) if not defined
-export const baseURL = process.env.BASE_URL
-  ? process.env.BASE_URL
+export const baseURL = process.env.REACT_APP_BASE_URL
+  ? process.env.REACT_APP_BASE_URL
   : window.location.origin;
