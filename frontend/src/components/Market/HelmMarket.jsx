@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { sendUserRequest } from "../../utils/request";
 import HubInstallModal from "./Modals/HubInstall";
 import RepoInstallModal from "./Modals/RepoInstall";
+import { SearchOutlined } from "@ant-design/icons";
 
 const { Paragraph } = Typography;
 const { Meta } = Card;
@@ -72,39 +73,43 @@ export default function HelmMarket() {
         <Paragraph>
           <blockquote>一键部署应用程序到集群。</blockquote>
         </Paragraph>
-        <Input
-          placeholder="search package"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          style={{ width: 400 }}
-          prefix={
-            <Select
-              style={{ width: 80 }}
-              defaultValue="hub"
-              options={[
-                { label: "Hub", value: "hub" },
-                { label: "Repo", value: "repo" },
-              ]}
-              onChange={(value) => {
-                if (value === "hub") {
-                  setSelectSearchHub(true);
-                } else {
-                  setSelectSearchHub(false);
-                }
-              }}
-            />
-          }
-          suffix={
-            <Button
-              loading={searchLoading}
-              onClick={() => {
-                doSearch(1);
-              }}
-            >
-              搜索
-            </Button>
-          }
-        />
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Select
+            style={{ width: 100 }}
+            size="large"
+            defaultValue="hub"
+            options={[
+              { label: "Hub", value: "hub" },
+              { label: "Repo", value: "repo" },
+            ]}
+            onChange={(value) => {
+              if (value === "hub") {
+                setSelectSearchHub(true);
+              } else {
+                setSelectSearchHub(false);
+              }
+            }}
+          />
+          <Input
+            placeholder="search package"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            style={{ width: 400, marginLeft: 10 }}
+            onPressEnter={() => {
+              doSearch(1);
+            }}
+            suffix={
+              <Button
+                type="text"
+                icon={<SearchOutlined />}
+                loading={searchLoading}
+                onClick={() => {
+                  doSearch(1);
+                }}
+              />
+            }
+          />
+        </div>
       </div>
 
       <div>
