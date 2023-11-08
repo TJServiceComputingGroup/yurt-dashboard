@@ -95,6 +95,10 @@ export default function BaseInstallModal({
             }
             onChange={(value) => {
               !!onVersionSelectChangeFunc && onVersionSelectChangeFunc(value);
+              form.setFieldsValue({
+                config: "defaultConfig",
+              });
+              setShowConfigFileItem(false);
             }}
           />
         </Form.Item>
