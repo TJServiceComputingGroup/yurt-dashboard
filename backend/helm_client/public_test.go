@@ -33,7 +33,7 @@ func TestHub(t *testing.T) {
 	})
 
 	t.Run("get hub package details", func(t *testing.T) {
-		one, err := ValueHub(&HubValueOptions{
+		one, err := DetailHub(&HubDetailOptions{
 			RepoName:    TestRepoName,
 			PackageName: TestChartName,
 			Version:     TestChartVersion,

@@ -81,6 +81,19 @@ const MySider = () => {
         <Menu.Item key="lab" icon={<ExperimentOutlined />}>
           <Link to="/lab">实验室</Link>
         </Menu.Item>
+        {userProfile && userProfile.metadata.name === "admin" && (
+          <SubMenu key="appstore" icon={<AppstoreOutlined />} title="应用中心">
+            <Menu.Item key="appmarket">
+              <Link to="/appmarket">应用市场</Link>
+            </Menu.Item>
+            <Menu.Item key="applist">
+              <Link to="/applist">应用管理</Link>
+            </Menu.Item>
+            <Menu.Item key="repo">
+              <Link to="/repo">源管理</Link>
+            </Menu.Item>
+          </SubMenu>
+        )}
       </Menu>
     </Sider>
   );

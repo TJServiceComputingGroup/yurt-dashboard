@@ -3,6 +3,7 @@ package helm_client
 import (
 	"encoding/json"
 	"errors"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"path"
@@ -35,8 +36,21 @@ type HubSearchElement struct {
 	Repo              HubSearchElementRepo        `json:"repository"`
 }
 
+type HubSearchFacetOption struct {
+	ID    int    `json:"id"`
+	Name  string `json:"name"`
+	Total int    `json:"total"`
+}
+
+type HubSearchFacet struct {
+	Title     string                 `json:"title"`
+	FilterKey string                 `json:"filter_key"`
+	Options   []HubSearchFacetOption `json:"options"`
+}
+
 type HubSearchRsp struct {
 	HubSearchElements []HubSearchElement `json:"packages"`
+	HubSearchFacets   []HubSearchFacet   `json:"facets"`
 }
 
 type HubSearchOptions struct {
@@ -45,10 +59,15 @@ type HubSearchOptions struct {
 	Offset int    `json:"offset"`
 }
 
-type HubValueOptions struct {
+type HubDetailOptions struct {
 	RepoName    string `json:"repo_name"`
 	PackageName string `json:"package_name"`
 	Version     string `json:"version"`
+}
+
+type HubGetValueOptions struct {
+	ID      string `json:"package_id"`
+	Version string `json:"version"`
 }
 
 // Search results from the hub based on keywords
@@ -70,7 +89,7 @@ func (c *baseClient) searchHub(o *HubSearchOptions) (*HubSearchRsp, error) {
 		o.Name,
 		o.Limit,
 		o.Offset,
-		false,
+		true,
 		"relevance",
 		0,
 		false})
@@ -99,7 +118,7 @@ func (c *baseClient) searchHub(o *HubSearchOptions) (*HubSearchRsp, error) {
 }
 
 // Get more detailed information about a search result
-func (c *baseClient) valueHub(o *HubValueOptions) (*HubSearchElement, error) {
+func (c *baseClient) detailHub(o *HubDetailOptions) (*HubSearchElement, error) {
 	valueURL, err := url.Parse(HelmHubURL)
 	if err != nil {
 		return nil, err
@@ -127,4 +146,30 @@ func (c *baseClient) valueHub(o *HubValueOptions) (*HubSearchElement, error) {
 	result := &HubSearchElement{}
 	json.NewDecoder(res.Body).Decode(result)
 	return result, nil
+}
+
+func (c *baseClient) getHubChartValue(o *HubGetValueOptions) (string, error) {
+	valueURL, err := url.Parse(HelmHubURL)
+	if err != nil {
+		return "", err
+	}
+	valueURL.Path = path.Join(valueURL.Path, o.ID, o.Version, "values")
+
+	req, err := http.NewRequest(http.MethodGet, valueURL.String(), nil)
+	if err != nil {
+		return "", err
+	}
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer res.Body.Close()
+
+	if res.StatusCode != 200 {
+		return "", errors.New("value request get error code")
+	}
+
+	content, err := ioutil.ReadAll(res.Body)
+	return string(content), nil
 }

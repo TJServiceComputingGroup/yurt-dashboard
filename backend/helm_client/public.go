@@ -23,9 +23,14 @@ func SearchHub(o *HubSearchOptions) (*HubSearchRsp, error) {
 	return c.searchHub(o)
 }
 
-func ValueHub(o *HubValueOptions) (*HubSearchElement, error) {
+func DetailHub(o *HubDetailOptions) (*HubSearchElement, error) {
 	c := CreateClient("")
-	return c.valueHub(o)
+	return c.detailHub(o)
+}
+
+func GetHubValue(o *HubGetValueOptions) (string, error) {
+	c := CreateClient("")
+	return c.getHubChartValue(o)
 }
 
 func InstallHubPackage(o *HubInstallOptions) error {
