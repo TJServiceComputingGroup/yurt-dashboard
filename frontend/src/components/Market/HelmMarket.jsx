@@ -13,14 +13,16 @@ export default function HelmMarket() {
   const pageSize = 12;
   const [inputValue, setInputValue] = useState("");
   const [selectSearchHub, setSelectSearchHub] = useState(true);
-  const [isSearchHub, setIsSearchHub] = useState(true);
+  const [curSearchInputValue, setCurSearchInputValue] = useState("");
+  const [isCurSearchHub, setIsCurSearchHub] = useState(true);
+
   const [searchData, setSearchData] = useState(null);
   const [searchLoading, setSearchLoading] = useState(false);
   const [totalNum, setTotalNum] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    doSearch(1);
+    doSearch();
   }, []);
 
   // modal
@@ -30,30 +32,40 @@ export default function HelmMarket() {
     useState(false);
   const openModal = (item) => {
     setModalConfig(item);
-    if (isSearchHub) {
+    if (isCurSearchHub) {
       setHubInstallModalVisible(true);
     } else {
       setRepoInstallModalVisible(true);
     }
   };
 
-  const onSearchEnd = (page, data) => {
-    setIsSearchHub(selectSearchHub);
+  const onSearchEnd = (data) => {
     setSearchLoading(false);
-    setSearchData(data.elements);
+
+    setCurSearchInputValue(inputValue);
+    setIsCurSearchHub(selectSearchHub);
+    setSearchData(data.elements.map(transformSearchData));
+    setTotalNum(data.total);
+    setCurrentPage(1);
+  };
+
+  const onChangePageEnd = (page, data) => {
+    setSearchLoading(false);
+
+    setSearchData(data.elements.map(transformSearchData));
     setTotalNum(data.total);
     setCurrentPage(page);
   };
 
-  const doSearch = (page) => {
+  const doSearch = () => {
     setSearchLoading(true);
     if (selectSearchHub) {
       sendUserRequest("/helm/searchHub", {
         search_name: inputValue,
         limit: pageSize,
-        offset: (page - 1) * pageSize,
+        offset: 0,
       }).then((res) => {
-        onSearchEnd(page, res.data);
+        onSearchEnd(res.data);
       });
     } else {
       sendUserRequest("/helm/searchRepo", {
@@ -61,7 +73,28 @@ export default function HelmMarket() {
         RepoNames: [],
         Version: "",
       }).then((res) => {
-        onSearchEnd(page, res.data);
+        onSearchEnd(res.data);
+      });
+    }
+  };
+
+  const changePage = (page) => {
+    setSearchLoading(true);
+    if (isCurSearchHub) {
+      sendUserRequest("/helm/searchHub", {
+        search_name: curSearchInputValue,
+        limit: pageSize,
+        offset: (page - 1) * pageSize,
+      }).then((res) => {
+        onChangePageEnd(page, res.data);
+      });
+    } else {
+      sendUserRequest("/helm/searchRepo", {
+        search_names: [curSearchInputValue],
+        RepoNames: [],
+        Version: "",
+      }).then((res) => {
+        onChangePageEnd(page, res.data);
       });
     }
   };
@@ -96,7 +129,7 @@ export default function HelmMarket() {
             onChange={(e) => setInputValue(e.target.value)}
             style={{ width: 400, marginLeft: 10 }}
             onPressEnter={() => {
-              doSearch(1);
+              doSearch();
             }}
             suffix={
               <Button
@@ -122,7 +155,7 @@ export default function HelmMarket() {
           pagination={{
             current: currentPage,
             onChange: (page) => {
-              doSearch(page);
+              changePage(page);
             },
             pageSize: pageSize,
             showSizeChanger: false,
@@ -184,4 +217,11 @@ export default function HelmMarket() {
       />
     </div>
   );
+
+  function transformSearchData(element, i) {
+    return {
+      key: currentPage.toString() + "-" + i.toString(),
+      ...element,
+    };
+  }
 }
