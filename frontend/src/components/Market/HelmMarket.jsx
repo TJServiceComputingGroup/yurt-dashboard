@@ -137,7 +137,7 @@ export default function HelmMarket() {
                 icon={<SearchOutlined />}
                 loading={searchLoading}
                 onClick={() => {
-                  doSearch(1);
+                  doSearch();
                 }}
               />
             }
@@ -151,13 +151,13 @@ export default function HelmMarket() {
           grid={{ sm: 1, md: 1, lg: 2, xl: 3, column: 4, gutter: 10 }}
           dataSource={!!searchData ? searchData : []}
           loading={!searchData}
-          rowKey="name"
+          rowKey="key"
           pagination={{
             current: currentPage,
             onChange: (page) => {
               changePage(page);
             },
-            pageSize: pageSize,
+            defaultPageSize: pageSize,
             showSizeChanger: false,
             total: totalNum,
           }}
