@@ -39,6 +39,10 @@ func getPodHandler(c *gin.Context) {
 	proxyRequest(c, client.GetRawPod)
 }
 
+func getServiceHandler(c *gin.Context) {
+	proxyRequest(c, client.GetRawService)
+}
+
 func getClusterOverviewHandler(c *gin.Context) {
 
 	kubeConfig, namespace, err := getUserInfoFromParas(c)

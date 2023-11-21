@@ -11,6 +11,7 @@ import SystemApp from "./components/AppManagement/SystemApp";
 import RepoManagement from "./components/Market/RepoManagement";
 import AppList from "./components/Market/AppList";
 import HelmMarket from "./components/Market/HelmMarket";
+import Service from "./components/WorkloadManagement/Service";
 
 export const routes = [
   {
@@ -44,6 +45,10 @@ export const routes = [
   {
     path: "/pod",
     main: () => <Pod></Pod>,
+  },
+  {
+    path: "/service",
+    main: () => <Service></Service>,
   },
   {
     path: "/lab",

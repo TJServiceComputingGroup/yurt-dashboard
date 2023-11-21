@@ -21,10 +21,7 @@ const MySider = () => {
   const [userProfile] = useUserProfile();
 
   const [collapsed, setCollapse] = useSessionState("collapsed", false);
-  const [openKeys, setOpenKeys] = useSessionState("openKeys", [
-    "nodemanagement",
-    "workload",
-  ]);
+  const [openKeys, setOpenKeys] = useSessionState("openKeys", []);
 
   const onCollapse = (collapsed) => {
     setCollapse(collapsed);
@@ -67,6 +64,9 @@ const MySider = () => {
           )}
           <Menu.Item key="pod">
             <Link to="/pod">容器组</Link>
+          </Menu.Item>
+          <Menu.Item key="service">
+            <Link to="/service">服务</Link>
           </Menu.Item>
           <Menu.Item key="deployment">
             <Link to="/deployment">无状态</Link>
