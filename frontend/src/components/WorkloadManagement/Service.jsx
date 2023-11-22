@@ -10,7 +10,8 @@ function renderPorts(ports) {
           console.log(port);
           return (
             <div key={i} style={{ whiteSpace: "nowrap" }}>
-              {port.port} / {port.protocol}
+              {port.port}
+              {!!port.nodePort && ":" + port.nodePort}/{port.protocol}
             </div>
           );
         })}
