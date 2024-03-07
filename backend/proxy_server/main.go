@@ -42,6 +42,7 @@ func setAPIGroup(router *gin.Engine) {
 		api.POST("/getJobs", getJobHandler)
 		api.POST("/getNodepools", getNodepoolHandler)
 		api.POST("/getPods", getPodHandler)
+		api.POST("/getServices", getServiceHandler)
 		api.POST("/login", loginHandler)
 		api.POST("/register", registerHandler)
 		api.POST("/setNodeAutonomy", setNodeAutonomyHandler)
@@ -54,6 +55,8 @@ func setAPIGroup(router *gin.Engine) {
 		api.POST("/guideComplete", guideCompleteHandler)
 	}
 	setSystemAPIGroup(api)
+	setRepoAPIGroup(api)
+	setHelmAPIGroup(api)
 }
 
 func setSystemAPIGroup(router *gin.RouterGroup) {
@@ -64,6 +67,30 @@ func setSystemAPIGroup(router *gin.RouterGroup) {
 		system.POST("/appUninstall", uninstallSystemAppHandler)
 		system.POST("/appDefaultConfig", getSystemAppDefaultConfigHandler)
 		system.POST("/appInstallFromGuide", installSystemAppFromGuideHandler)
+	}
+}
+
+func setRepoAPIGroup(router *gin.RouterGroup) {
+	repo := router.Group("/repo")
+	{
+		repo.POST("/list", listRepoHandler)
+		repo.POST("/add", addRepoHandler)
+		repo.POST("/update", updateRepoHandler)
+		repo.POST("/remove", removeRepoHandler)
+	}
+}
+
+func setHelmAPIGroup(router *gin.RouterGroup) {
+	helm := router.Group("/helm")
+	{
+		helm.POST("/list", helmListHandler)
+		helm.POST("/install", helmInstallHandler)
+		helm.POST("/uninstall", helmUninstallHandler)
+		helm.POST("/searchRepo", helmSearchRepoHandler)
+		helm.POST("/searchHub", helmSearchHubHandler)
+		helm.POST("/detailHub", helmDetailHubHandler)
+		helm.POST("/getHubValue", helmGetHubValueHandler)
+		helm.POST("/getRepoValue", helmGetRepoValueHandler)
 	}
 }
 

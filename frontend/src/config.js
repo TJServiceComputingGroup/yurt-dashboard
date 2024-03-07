@@ -8,6 +8,10 @@ import Job from "./components/WorkloadManagement/Job";
 import Pod from "./components/WorkloadManagement/Pod";
 import Lab from "./components/Lab/Lab";
 import SystemApp from "./components/AppManagement/SystemApp";
+import RepoManagement from "./components/Market/RepoManagement";
+import AppList from "./components/Market/AppList";
+import HelmMarket from "./components/Market/HelmMarket";
+import Service from "./components/WorkloadManagement/Service";
 
 export const routes = [
   {
@@ -43,6 +47,10 @@ export const routes = [
     main: () => <Pod></Pod>,
   },
   {
+    path: "/service",
+    main: () => <Service></Service>,
+  },
+  {
     path: "/lab",
     main: () => <Lab></Lab>,
   },
@@ -50,6 +58,21 @@ export const routes = [
     path: "/systemapp",
     type: "admin",
     main: () => <SystemApp></SystemApp>,
+  },
+  {
+    path: "/repo",
+    type: "admin",
+    main: () => <RepoManagement></RepoManagement>,
+  },
+  {
+    path: "/applist",
+    type: "admin",
+    main: () => <AppList></AppList>,
+  },
+  {
+    path: "/appmarket",
+    type: "admin",
+    main: () => <HelmMarket></HelmMarket>,
   },
 ];
 

@@ -244,3 +244,17 @@ export function getPods(paras) {
     pods.items.map(transform)
   );
 }
+
+export function getServices(paras) {
+  const transform = (svc, i) => ({
+    ...transformObject(svc, i),
+    namespace: svc.metadata.namespace,
+    type: svc.spec.type,
+    clusterip: svc.spec.clusterIP,
+    ports: svc.spec.ports,
+  });
+
+  return sendUserRequest("/getServices", paras).then((svcs) =>
+    svcs.items.map(transform)
+  );
+}

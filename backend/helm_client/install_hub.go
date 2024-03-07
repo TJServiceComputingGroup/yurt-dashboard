@@ -9,7 +9,7 @@ type HubInstallOptions struct {
 }
 
 func (c *baseClient) installHubPackage(o *HubInstallOptions) error {
-	res, err := c.valueHub(&HubValueOptions{
+	res, err := c.detailHub(&HubDetailOptions{
 		RepoName:    o.RepoName,
 		PackageName: o.PackageName,
 		Version:     o.Version,

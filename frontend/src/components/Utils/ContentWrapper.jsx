@@ -21,10 +21,7 @@ const MySider = () => {
   const [userProfile] = useUserProfile();
 
   const [collapsed, setCollapse] = useSessionState("collapsed", false);
-  const [openKeys, setOpenKeys] = useSessionState("openKeys", [
-    "nodemanagement",
-    "workload",
-  ]);
+  const [openKeys, setOpenKeys] = useSessionState("openKeys", []);
 
   const onCollapse = (collapsed) => {
     setCollapse(collapsed);
@@ -68,6 +65,9 @@ const MySider = () => {
           <Menu.Item key="pod">
             <Link to="/pod">容器组</Link>
           </Menu.Item>
+          <Menu.Item key="service">
+            <Link to="/service">服务</Link>
+          </Menu.Item>
           <Menu.Item key="deployment">
             <Link to="/deployment">无状态</Link>
           </Menu.Item>
@@ -81,6 +81,19 @@ const MySider = () => {
         <Menu.Item key="lab" icon={<ExperimentOutlined />}>
           <Link to="/lab">实验室</Link>
         </Menu.Item>
+        {userProfile && userProfile.metadata.name === "admin" && (
+          <SubMenu key="appstore" icon={<AppstoreOutlined />} title="应用中心">
+            <Menu.Item key="appmarket">
+              <Link to="/appmarket">应用市场</Link>
+            </Menu.Item>
+            <Menu.Item key="applist">
+              <Link to="/applist">应用管理</Link>
+            </Menu.Item>
+            <Menu.Item key="repo">
+              <Link to="/repo">源管理</Link>
+            </Menu.Item>
+          </SubMenu>
+        )}
       </Menu>
     </Sider>
   );
